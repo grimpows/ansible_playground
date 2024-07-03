@@ -1,4 +1,4 @@
-- name: Premier Playbook
+- name: Playbook FILES
   hosts: all
   become: yes
   remote_user: test
@@ -28,4 +28,8 @@
       owner: root
       group: root
       mode: 0755
+  - name: suppression du repertoire /tmp/moi
+    file:
+      path: /tmp/moi/
+      state: absent
   

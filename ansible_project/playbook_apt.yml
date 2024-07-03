@@ -1,0 +1,20 @@
+- name: Playbook APT
+  hosts: all
+  become: yes
+  remote_user: test
+  tasks:
+  - name: nettoyage du cache avec le module apt
+    apt:
+      update_cache: yes
+      cache_valid_time: 3600
+  - name: installation de haproxy avec le module apt
+    apt:
+      name: haproxy
+      state: latest
+  - name: suppression d'haproxy
+    apt:
+      name: haproxy
+      state: absent
+
+  
+  

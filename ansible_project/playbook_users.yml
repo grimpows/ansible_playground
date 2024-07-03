@@ -1,0 +1,22 @@
+- name: Playbook USER
+  hosts: all
+  become: yes
+  remote_user: test
+  tasks:
+  - name: creation user devops
+    user:
+      name: devops
+      state: present
+      generate_ssh_key: yes
+      shell: /bin/bash
+      password: "{{ 'devops' | password_hash('sha512') }}"
+    register: __user_devops
+  - name: debug
+    debug:
+      var: __user_devops
+  - name: remove devops
+    user:
+      name: devops
+      state: absent
+  
+  

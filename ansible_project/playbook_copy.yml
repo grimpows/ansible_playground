@@ -1,0 +1,24 @@
+- name: Playbook COPY
+  hosts: all
+  become: yes
+  remote_user: test
+  tasks:
+  - name: copy
+    copy:
+      src: playbook_copy_ressources/test.txt
+      dest: /tmp/test.txt
+  - name: copy folder
+    copy:
+      src: playbook_copy_ressources/folder_to_copy/
+      dest: /tmp/copy_folder/
+  - name: copy folder inside remote target
+    copy:
+      src: /tmp/copy_folder/
+      dest: /tmp/copy_folder_remote_copied/
+      remote_src: yes
+  - name: listing temp
+    command: ls -l /tmp
+    register: __listing_result
+  - name: show listing
+    debug:
+      var: __listing_result.stdout_lines
