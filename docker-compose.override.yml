@@ -1,0 +1,20 @@
+services:
+  ansible:
+    image: lab/ansible:${ANSIBLE_VERSION}
+    container_name: ansible
+    hostname: ansible
+    privileged: true
+    build: # construction de l'image
+      context: ./images/ansible
+      args:
+        - ANSIBLE_VERSION=${ANSIBLE_VERSION}
+    volumes:
+      # copie les fichiers de ./ansible/etc vers le conteneur /etc/ansible
+      - ./ansible/etc:/etc/ansible:ro # ro pour Read Only. Evite la modification du fichier depuis le conteneur
+      - ./exemples:/exemples
+      - ./ansible_project:/root/ansible_project
+      # pour lancer les conteneurs
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - backend
+

@@ -1,0 +1,40 @@
+services:
+  node1:
+    image: lab/ubuntu:ssh
+    build: # construction de l'image
+      context: ./images/ubuntu
+    container_name: node1
+    hostname: node1
+    expose:
+      - 80
+      - 443
+    networks:
+      - backend
+
+  node2:
+    image: lab/ubuntu:ssh
+    build: # construction de l'image
+      context: ./images/ubuntu
+    container_name: node2
+    hostname: node2
+    expose:
+      - 80
+      - 443
+    networks:
+      - backend
+
+  node3:
+    image: lab/ubuntu:ssh
+    build: # construction de l'image
+      context: ./images/ubuntu
+    container_name: node3
+    hostname: node3
+    networks:
+      - backend
+    expose:
+      - 80
+      - 443
+
+
+networks:
+  backend:
