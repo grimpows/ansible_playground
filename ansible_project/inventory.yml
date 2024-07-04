@@ -7,6 +7,9 @@ all:
         webserver:
           hosts:
             node[1:3]
+        appserver:
+          hosts:
+            node[4:6]
     monitoring:
       children:
         webserver:

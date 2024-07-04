@@ -16,5 +16,9 @@
       name: haproxy
       state: absent
 
+  - name: installation de tree
+    apt:
+      name: tree
+      state: latest
   
   

@@ -3,6 +3,7 @@
   become: yes
   remote_user: test
   tasks:
+
   - name: creation user devops
     user:
       name: devops
@@ -11,9 +12,29 @@
       shell: /bin/bash
       password: "{{ 'devops' | password_hash('sha512') }}"
     register: __user_devops
+
   - name: debug
     debug:
       var: __user_devops
+  
+  - name: Ajout devops user to the sudoers
+    copy:
+      content: "devops ALL=(ALL) NOPASSWD: ALL"
+      dest: /etc/sudoers.d/devops
+      owner: root
+      group: root
+      mode: 0600
+      validate : visudo /usr/sbin/visudo -cf %s
+
+  - name: recuperation de la valeur du fichier /etc/sudoers.d/devops
+    command: cat /etc/sudoers.d/devops
+    register: __cat_sudoers_devops_result
+
+  - name: affichage de la valeur du fichier /etc/sudoers.d/devops
+    debug:
+      var: __cat_sudoers_devops_result.stdout
+
+
   - name: remove devops
     user:
       name: devops

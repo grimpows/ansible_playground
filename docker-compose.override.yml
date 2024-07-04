@@ -15,6 +15,7 @@ services:
       - ./ansible_project:/root/ansible_project
       # pour lancer les conteneurs
       - /var/run/docker.sock:/var/run/docker.sock
+    working_dir: /root/ansible_project
     networks:
       - backend
 

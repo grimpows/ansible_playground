@@ -35,6 +35,43 @@ services:
       - 80
       - 443
 
+  node4:
+    image: lab/ubuntu:ssh
+    build: # construction de l'image
+      context: ./images/ubuntu
+    container_name: node4
+    hostname: node4
+    networks:
+      - backend
+    expose:
+      - 80
+      - 443
+
+
+  node5:
+    image: lab/ubuntu:ssh
+    build: # construction de l'image
+      context: ./images/ubuntu
+    container_name: node5
+    hostname: node5
+    networks:
+      - backend
+    expose:
+      - 80
+      - 443
+
+
+  node6:
+    image: lab/ubuntu:ssh
+    build: # construction de l'image
+      context: ./images/ubuntu
+    container_name: node6
+    hostname: node6
+    networks:
+      - backend
+    expose:
+      - 80
+      - 443
 
 networks:
   backend:

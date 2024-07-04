@@ -2,23 +2,72 @@
   hosts: all
   become: yes
   remote_user: test
+  vars: 
+    mesfichiers:
+      - { source: "playbook_copy_ressources/test1.txt", destination: "/tmp/test1.txt", mode: "0755", owner: "test"}
+      - { source: "playbook_copy_ressources/test2.txt", destination: "/tmp/test2.txt", mode: "0644", owner: "test"}
   tasks:
+
   - name: copy
     copy:
       src: playbook_copy_ressources/test.txt
       dest: /tmp/test.txt
+
   - name: copy folder
     copy:
       src: playbook_copy_ressources/folder_to_copy/
       dest: /tmp/copy_folder/
+
   - name: copy folder inside remote target
     copy:
       src: /tmp/copy_folder/
       dest: /tmp/copy_folder_remote_copied/
       remote_src: yes
+
+  - name: copy avec boucles
+    copy:
+      src: "{{item.source}}"
+      dest: "{{item.destination}}"
+      mode: "{{item.mode}}"
+      owner: "{{item.owner}}"
+    with_items: 
+      - "{{ mesfichiers }}"
+
+  - name: creation du repertoire /tmp/patternFound
+    file:
+      path: /tmp/patternFound/
+      recurse: yes
+      state: directory
+      owner: root  
+
+# https://github.com/moudsen/cleanansiblebackups to check later for remove older backups
+  - name: copy avec pattern
+    copy:
+      src: "{{ item }}"
+      dest: /tmp/patternFound/
+      backup: yes
+    with_fileglob:
+      - playbook_copy_ressources/test*
+  
+  - name: injection de contenue multilignes avec variable
+    copy:
+      content: |
+        Bonjour
+        Je suis sur la machine {{ ansible_host }}
+      dest: /tmp/multiligne_avec_variable.txt
+
+  - name: recuperation de la valeur du fichier multilignes
+    command: cat /tmp/multiligne_avec_variable.txt
+    register: __cat_multiligne_avec_variable_result
+
+  - name: affichage de la valeur du fichier multilignes
+    debug:
+      var: __cat_multiligne_avec_variable_result.stdout_lines
+
   - name: listing temp
-    command: ls -l /tmp
+    command: tree /tmp
     register: __listing_result
+
   - name: show listing
     debug:
       var: __listing_result.stdout_lines

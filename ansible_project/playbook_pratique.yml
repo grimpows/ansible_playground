@@ -1,0 +1,47 @@
+- name: Playbook PRATIQUE WEBSERVER
+  hosts: webserver
+  become: yes
+  remote_user: test
+  tasks:
+  - name: create group users
+    group: 
+      name: users
+      state: present
+  
+  - name: create group admin
+    group:
+      name: admin
+      state: present
+
+  - name: create user apacheadm
+    user:
+      name: apacheadm
+      groups: users,admin
+      append: yes
+      home: /home/apacheadm
+
+  - name: install apache2
+    apt:
+      name: apache2
+      state: latest
+  
+- name: Playboook PRATIQUE APPSERVER
+  hosts: appserver
+  become: yes
+  remote_user: test
+  tasks:  
+
+  - name: create a username for utilisateur
+    user: 
+      name: utilisateur
+      group: users
+      append: yes
+      home: /home/utilisateur
+
+  - name: create a directory for apache utilisateur
+    file:
+      path: /opt/oracle
+      owner: utilisateur
+      group: users
+      state: directory
+      mode: 0755

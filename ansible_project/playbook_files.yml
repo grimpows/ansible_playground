@@ -3,17 +3,21 @@
   become: yes
   remote_user: test
   tasks:
+  
   - name: je ping
     ping:
+
   - name: je debug
     debug:
       msg: "Hello {{ var1 }}"
+
   - name: creation du repertoire /tmp/moi
     file:
       path: /tmp/moi/
       recurse: yes
       state: directory
       owner: root
+
   - name: creation du fichier /tmp/moi/monfichier.txt
     file:
       path: /tmp/moi/monfichier.txt
@@ -21,6 +25,7 @@
       owner: root
       group: root
       mode: 0755
+
   - name: creation du fichier /tmp/moi/monfichier.txt
     file:
       path: /tmp/moi/monfichier.txt
@@ -28,6 +33,7 @@
       owner: root
       group: root
       mode: 0755
+
   - name: suppression du repertoire /tmp/moi
     file:
       path: /tmp/moi/
