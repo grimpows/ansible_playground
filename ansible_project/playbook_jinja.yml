@@ -1,0 +1,42 @@
+- name: Playbook JINJA3
+  hosts: all
+  become: yes
+  remote_user: test
+  vars:
+    listItems:
+    - valeur1
+    - valeur2
+    - valeur3
+
+  tasks:
+  - name: debug
+    debug:
+      msg: |
+        {% for item in listItems %}
+        {{ item }}
+        {% endfor %}
+
+  - name: creation du repertoire /tmp
+    file:
+      path: /tmp
+      recurse: yes
+      state: directory
+      owner: root
+
+  - name: copy from raw
+    copy:
+      content: |
+        {% for item in listItems %}
+        {{ item }}
+        {% endfor %}
+      dest: /tmp/test_jinja3.txt
+
+  - name: recuperation fichier jinja3
+    command: cat /tmp/test_jinja3.txt
+    register: __cat_test_jinja3_result
+
+  - name: affichage de la valeur du fichier jinja3
+    debug:
+      var: __cat_test_jinja3_result.stdout_lines
+  
+  
