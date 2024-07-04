@@ -7,14 +7,29 @@
     - valeur1
     - valeur2
     - valeur3
+    dictionnaireStringItems:
+      key1: valeur1
+      key2: valeur2
+      key3: valeur3
+    listObjectItems:
+      - { name: nom1, value1: valeur1, value2: valeur2 }
+      - { name: nom2, value1: haha, value2: nope }
+      - { name: nom3, value1: hihi, value2: test }
+    dictionnaireDeDictionnaire:
+      item1:
+        name: jojo
+        city: toulouse
+      item2:
+        name: toto
+        city: jesaisplus
 
   tasks:
   - name: debug
     debug:
       msg: |
         {% for item in listItems %}
-        {{ item }}
-        {% endfor %}
+        {{ item -}}' '
+        {%- endfor %}
 
   - name: creation du repertoire /tmp
     file:
@@ -26,9 +41,42 @@
   - name: copy from raw
     copy:
       content: |
+        Liste de string :
         {% for item in listItems %}
-        {{ item }}
+        {{ item }} 
         {% endfor %}
+
+        Dictionnaire de string :
+        {% for item, data in dictionnaireStringItems.items() %}
+        {{ item }} >> {{ data }}
+        {% endfor %}
+
+        Liste d'objets :
+        {% for item in listObjectItems %}
+        >name> {{ item.name }} >Value1> {{ item.value1 }} >Value2> {{ item.value2 }}
+        {% endfor %}
+
+        Dictionnaire de dictionnaires :
+        {% for item in dictionnaireDeDictionnaire %}
+        >name> {{ dictionnaireDeDictionnaire[item].name }} >city> {{ dictionnaireDeDictionnaire[item].city }}
+        {% endfor %}
+
+
+        Dictionnaire de dictionnaires (double boucle) :
+        {% for item, data in dictionnaireDeDictionnaire.items() %}
+        {% for subitem, subdata  in data.items() %}
+        {{ subitem }} >> {{ subdata }}
+        {% endfor %}
+        {% endfor %}
+
+        dictionnaire de dictionnaire (dictsort)
+        {% for item, data in dictionnaireDeDictionnaire | dictsort %}
+        {% for subitem, subdata  in data.items() %}
+        {{ subitem }} >> {{ subdata }}
+        {% endfor %}
+        {% endfor %}
+
+
       dest: /tmp/test_jinja3.txt
 
   - name: recuperation fichier jinja3
