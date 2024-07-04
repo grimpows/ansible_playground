@@ -3,18 +3,30 @@
   become: yes
   remote_user: test
   vars:
+    var1: 1
+    # var2: 2
+
+    unknow_type_var1:
+      - k1 : v1
+      - k2 : v2
+
+    unknow_type_var2: test
+
     listItems:
     - valeur1
     - valeur2
     - valeur3
+
     dictionnaireStringItems:
       key1: valeur1
       key2: valeur2
       key3: valeur3
+
     listObjectItems:
       - { name: nom1, value1: valeur1, value2: valeur2 }
       - { name: nom2, value1: haha, value2: nope }
       - { name: nom3, value1: hihi, value2: test }
+
     dictionnaireDeDictionnaire:
       item1:
         name: jojo
@@ -76,6 +88,37 @@
         {% endfor %}
         {% endfor %}
 
+        test avec des conditions :
+        {%if var1 is defined and var2 is defined %}
+        var1 et var2 sont definis
+        {% elif var2 is not defined %}
+        var1 ok
+        Var 2 pas ok
+        {% else %}
+        variables pas ok
+        {% endif %}
+
+        {%if var1 is string %}
+        var1 est une chaine de caractere
+        {% else %}
+        var1 n'est pas une chaine de caractere
+        {% endif %}
+
+        {%if unknow_type_var1 is iterable and unknow_type_var1 is not string %}
+        {% for k in unknow_type_var1 %}
+        item uknow_type_var1 item : {{ k }}
+        {% endfor %}
+        {% else %}
+        value unknow_type_var1 n'est pas iterable ou est une string : {{ unknow_type_var1 }}
+        {% endif %}
+
+        {%if unknow_type_var2 is iterable and unknow_type_var2 is not string %}
+        {% for k in unknow_type_var2 %}
+        item uknow_type_var2 item : {{ k }}
+        {% endfor %}
+        {% else %}
+        value unknow_type_var2 n'est pas iterable ou est une string : {{ unknow_type_var2 }}
+        {% endif %}
 
       dest: /tmp/test_jinja3.txt
 

@@ -1,0 +1,66 @@
+- name: Playbook Handlers
+  hosts: all
+  become: yes
+  remote_user: test
+  tasks:
+  
+  - name: install nginx et curl
+    apt:
+      name: nginx,curl
+      state: present
+      cache_valid_time: 3600
+      update_cache: yes
+
+  - name: remove default file
+    file:
+      path: "{{ item }}"
+      state: absent
+    with_items:
+      - "/etc/nginx/sites-enabled/default"
+      - "/etc/nginx/sites-available/default"
+
+  - name: install vhost
+    template:
+      src: playbook_handlers_ressources/vhost.conf.j2
+      dest: /etc/nginx/sites-available/vhost.conf
+      owner: root
+      group: root
+      mode: 0644
+    notify: reload_nginx
+
+  - name: toto FLush handlers
+    meta: flush_handlers
+
+  - name: creation du lien symbolique du vhost
+    file:
+      src: /etc/nginx/sites-available/vhost.conf
+      dest: /etc/nginx/sites-enabled/vhost.conf
+      state: link
+
+  - name: start nginx
+    service:
+      name: nginx
+      state: started
+
+  - name: creation de fichier pour check l'odre d'appel du handler
+    file:
+      path: /tmp/handler_empty_file.txt
+      state: touch
+
+  - name: Check if need to restart
+    stat:
+      path: /var/run/reboot.pending
+    register: __need_reboot
+    changed_when: __need_reboot.stat.exists
+    notify: reboot_server
+
+
+  handlers:
+    - name: reload_nginx
+      service:
+        name: nginx
+        state: reloaded
+
+  
+  
+  
